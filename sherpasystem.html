@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Gestión de Activos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            min-height: 100vh;
+        }
+        
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            max-height: calc(100vh - 30px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .company-info {
+            text-align: left;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .btn {
+            padding: 15px 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-green {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+        
+        .btn-blue {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-green:hover {
+            background: linear-gradient(135deg, #219653, #27ae60);
+        }
+        
+        .btn-blue:hover {
+            background: linear-gradient(135deg, #2980b9, #21618c);
+        }
+        
+        .metrics-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            padding: 20px;
+            background: white;
+        }
+        
+        .team-metric {
+            background: #3498db;
+            color: white;
+            padding: 5px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .team-metric h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .team-metric .number {
+            font-size: 42px;
+            font-weight: bold;
+        }
+        
+        .assets-summary {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+        
+        .summary-item {
+            background: white;
+            padding: 15px 3px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .summary-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 8px 0;
+            color: #2c3e50;
+        }
+        
+        .summary-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        
+        .highlight {
+            background: #fff9e6;
+            border: 2px solid #f1c40f;
+        }
+        
+        .highlight-red {
+            background: #ffeaea;
+            border: 2px solid #e74c3c;
+        }
+        
+        .tables-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 0px 20px 20px 20px;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        /* NUEVO: Header compacto con barra de búsqueda */
+        .team-header-container {
+            background: #34495e;
+            color: white;
+            /*padding: 10px 15px;*/
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-header {
+            background: #34495e;
+            padding: 10px 15px;
+            font-size: 18px;
+            color: white;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        /* NUEVO: Barra de búsqueda compacta */
+        .team-search-compact {
+            width: 35%;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            background: white;
+            margin-right: 15px;
+        }
+        
+        .team-search-compact:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        
+        td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 13px;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        tr:hover {
+            background: #e8f4fc;
+        }
+        
+        .qr-code {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .employee-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .employee-link:hover {
+            text-decoration: underline;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+        
+        .status-inactive {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-terminated {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .table-scroll-container {
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        @media (max-width: 1200px) {
+            .summary-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .button-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .tables-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-search-compact {
+                width: 45%;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .button-container {
+                grid-template-columns: repeat(2, 1fr);
+                }
+            
+            .metrics-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .table-container {
+            overflow-x: auto;
+            }
+    
+             #assetsAvailableTable {
+                min-width: 500px;
+            }
+}
+        
+        @media (max-width: 768px) {
+            .button-container, .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tables-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-value {
+                font-size: 16px;
+            }
+            
+            .summary-label {
+                font-size: 11px;
+            }
+            
+            .btn {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .logo-container {
+                justify-content: center;
+            }
+            
+            .team-header-container {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .team-search-compact {
+                width: 100%;
+            }
+        }
+
+        /* Estilos para la tabla Assets in Custody */
+        #custodyDashboardTable {
+            font-size: 11px;
+        }
+
+        #custodyDashboardTable th {
+        font-size: 10px;
+        padding: 6px 3px;
+        text-align: center;
+        white-space: nowrap;
+        }
+
+        #custodyDashboardTable td {
+        font-size: 11px;
+        padding: 6px 3px;
+        text-align: center;
+        }
+
+        /* Asegurar que la tabla sea responsive */
+        @media (max-width: 768px) {
+         #custodyDashboardTable {
+        min-width: 800px;
+        }
+    
+        .table-scroll-container {
+        overflow-x: auto;
+         }
+        }
+
+        /* Estilos específicos para la tabla Assets in Custody */
+#custodyDashboardTable {
+    font-size: 11px;
+    table-layout: fixed; /* ✅ Esto fuerza los anchos definidos */
+    width: 100%;
+}
+
+#custodyDashboardTable th,
+#custodyDashboardTable td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Anchos específicos para columnas */
+#custodyDashboardTable th:nth-child(1), /* Employee */
+#custodyDashboardTable td:nth-child(1) {
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+}
+
+#custodyDashboardTable th:nth-child(2), /* Total */
+#custodyDashboardTable td:nth-child(2) {
+    width: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+}
+
+/* Columnas de categorías */
+#custodyDashboardTable th:nth-child(n+3):not(:last-child),
+#custodyDashboardTable td:nth-child(n+3):not(:last-child) {
+    width: 90px !important;
+    min-width: 60px !important;
+    max-width: 100px !important;
+}
+
+/* Columna QR Code */
+#custodyDashboardTable th:last-child,
+#custodyDashboardTable td:last-child {
+    width: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+}
+
+/* Asegurar que el scroll funcione correctamente */
+.table-scroll-container {
+    overflow-x: auto;
+}
+
+/* Para pantallas pequeñas, mantener el scroll horizontal */
+@media (max-width: 768px) {
+    #custodyDashboardTable {
+        min-width: 800px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="file:///C:/Users/UsuarioHP/Desktop/Sherpa/logo.png" alt="Sherpa Delivery Direct LLC Logo" onerror="this.style.display='none'">
+                </div>
+                <div class="company-info">
+                    <h1>Sherpa Delivery Direct, LLC</h1>
+                    <p>Assets Management Dashboard</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn btn-green" onclick="openCategoryModal()">Add/Edit Category</button>
+            <button class="btn btn-green" onclick="openAssetsModal()">Add/Edit Assets</button>
+            <button class="btn btn-green" onclick="openTeamModal()">Add/Edit User</button>
+            <button class="btn btn-green" onclick="openCustodyModal()">Assign/Release Stock</button>
+            <button class="btn btn-blue">Reports</button>
+        </div>
+        
+        <div class="metrics-section">
+            <div class="team-metric">
+                <h3>Qty Team</h3>
+                <div class="number" id="teamQty">3</div>
+                <p id="teamStatus">Active members</p>
+            </div>
+            
+            <div class="assets-summary">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">Total Assets</div>
+                        <div class="summary-value" id="assetsQty">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Total Cost Assets</div>
+                        <div class="summary-value" id="assetsCost">$0.00</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Total Assets In Custody</div>
+                        <div class="summary-value" id="availableQty">0</div>
+                    </div>
+                    <div class="summary-item highlight-red">
+                        <div class="summary-label">Total Qty Lost</div>
+                        <div class="summary-value" id="lostQty">0</div>
+                    </div>
+                    <div class="summary-item highlight-red">
+                        <div class="summary-label">% Total Lost</div>
+                        <div class="summary-value" id="lostPercentage">0%</div>
+                    </div>
+                    <div class="summary-item highlight">
+                        <div class="summary-label">Total Lost</div>
+                        <div class="summary-value" id="lostCost">$0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tablas reorganizadas: Assets Available, TEAM, Assets in Custody -->
+        <div class="tables-section">
+            <!-- Assets Available -->
+            <div class="table-container">
+                <div class="table-header">Assets Available</div>
+                <div class="table-scroll-container">
+                    <table id="assetsAvailableTable">
+                        <thead>
+                            <tr>
+                                <th>Assets</th>
+                                <th>Qty Init.</th>
+                                <th>Qty Add</th>
+                                <th>Qty Lost</th>
+                                <th>Qty Available</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assetsAvailableBody">
+                            <!-- Los datos se cargarán dinámicamente desde assets.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Tabla TEAM -->
+            <div class="table-container">
+                <div class="team-header-container">
+                    <div class="table-header">Team</div>
+                    <input type="text" id="teamSearch" class="team-search-compact" placeholder="Search..." onkeyup="filterTeamTable()">
+                </div>
+                <div class="table-scroll-container">
+                    <table id="teamTable">
+                        <thead>
+                            <tr>
+                                <th>Empl ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamTableBody">
+                            <!-- Los datos se cargarán dinámicamente desde team.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Assets in Custody -->
+<div class="table-container">
+    <div class="team-header-container">
+        <div class="table-header">Assets in Custody</div>
+        <input type="text" id="custodySearch" class="team-search-compact" placeholder="Search..." onkeyup="filterCustodyTable()">
+    </div>
+    <div class="table-scroll-container">
+        <table id="custodyDashboardTable">
+            <thead id="custodyDashboardHeader">
+                <tr>
+                    <th>Employee</th>
+                    <th>Total</th>
+                    <!-- Columnas fijas -->
+                    <th>BUCKET HAT</th>
+                    <th>BALL CAP</th>
+                    <th>BEANIE</th>
+                    <th>BACK COOLER</th>
+                    <th>THERMOS</th>
+                    <th>THERMAL BAG</th>
+                    <th>VEST</th>
+                    <th>RAIN JACKET</th>
+                    <th>MAN's SHIRT</th>
+                    <th>MAN's SHIRT LS</th>
+                    <th>MAN's SHORT</th>
+                    <th>MAN's PANT</th>
+                    <th>WOMAN's SHIRT</th>
+                    <th>WOMAN's SHIRT LS</th>
+                    <th>WOMAN's SHORT</th>
+                    <th>WOMAN's PANT</th>
+                    <!-- Columnas dinámicas adicionales se generarán aquí -->
+                    <th>QR Code</th>
+                </tr>
+            </thead>
+            <tbody id="custodyDashboardBody">
+                <!-- Los datos se cargarán dinámicamente desde custody.js -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <script>
+        // Variable global para mantener el término de búsqueda
+        let currentSearchTerm = '';
+
+        // FUNCIÓN NUEVA - Verificar si una categoría tiene low stock
+    async function categoryHasLowStock(categoryName) {
+        if (typeof assetsManager !== 'undefined') {
+            const categoryAssets = await assetsManager.getAssetsByCategory(categoryName);
+            return categoryAssets.some(asset => {
+                const threshold = asset.lowStockThreshold || 5;
+                return asset.qtyAvailable <= threshold;
+            });
+        }
+        return false;
+    }
+
+// Función para actualizar la tabla Assets in Custody en el dashboard
+async function updateCustodyDashboard() {
+    if (typeof custodyManager !== 'undefined' && typeof FIXED_CATEGORIES !== 'undefined') {
+        const thead = document.getElementById('custodyDashboardHeader');
+        const tbody = document.getElementById('custodyDashboardBody');
+        
+        tbody.innerHTML = '';
+        
+        // Obtener todas las asignaciones activas
+        const activeAssignments = custodyManager.getActiveAssignments();
+        
+        // CALCULAR EL TOTAL DE ITEMS EN CUSTODIA (suma de todas las cantidades)
+        let totalItemsInCustody = 0;
+        activeAssignments.forEach(assignment => {
+            totalItemsInCustody += assignment.quantity;
+        });
+        
+        // ACTUALIZAR LA MÉTRICA EN EL DASHBOARD - ESTA ES LA PARTE IMPORTANTE
+        const availableQtyElement = document.getElementById('availableQty');
+        if (availableQtyElement) {
+            availableQtyElement.textContent = totalItemsInCustody;
+            console.log('✅ Total Assets In Custody actualizado:', totalItemsInCustody);
+        }
+        
+        if (activeAssignments.length === 0) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td colspan="100" style="text-align: center; color: #666; padding: 20px; font-size: 12px;">
+                    No assets in custody
+                </td>
+            `;
+            tbody.appendChild(row);
+            return;
+        }
+        
+        // Obtener todas las categorías únicas de las asignaciones activas
+        const allCategories = [...new Set(activeAssignments.map(assignment => assignment.assetCategory))];
+        
+        // Identificar categorías adicionales (que no están en las fijas)
+        const additionalCategories = allCategories.filter(category => 
+            !FIXED_CATEGORIES.includes(category)
+        );
+        
+        // Actualizar el header
+        updateCustodyDashboardHeader(additionalCategories);
+        
+        // Agrupar asignaciones por empleado
+        const assignmentsByEmployee = {};
+        activeAssignments.forEach(assignment => {
+            if (!assignmentsByEmployee[assignment.employeeId]) {
+                assignmentsByEmployee[assignment.employeeId] = {
+                    employeeName: assignment.employeeName,
+                    employeeId: assignment.employeeId,
+                    totalQty: 0,
+                    categories: {}
+                };
+            }
+            
+            const employeeData = assignmentsByEmployee[assignment.employeeId];
+            employeeData.totalQty += assignment.quantity;
+            
+            // Inicializar categoría si no existe
+            if (!employeeData.categories[assignment.assetCategory]) {
+                employeeData.categories[assignment.assetCategory] = 0;
+            }
+            
+            // Sumar cantidad por categoría
+            employeeData.categories[assignment.assetCategory] += assignment.quantity;
+        });
+        
+        // Crear filas para cada empleado
+        Object.keys(assignmentsByEmployee).forEach(employeeId => {
+            const data = assignmentsByEmployee[employeeId];
+            const row = document.createElement('tr');
+            
+            let rowHTML = `
+                <td style="font-size: 12px; width: 150px; min-width: 150px;">
+                    <a class="employee-link" onclick="manageEmployeeAssets('${employeeId}')" 
+                       style="cursor: pointer; color: #3498db; text-decoration: none; font-weight: 500; font-size: 12px;">
+                        ${data.employeeName}
+                    </a>
+                </td>
+                <td style="font-weight: bold; background: #ecf0f1; text-align: center; font-size: 12px; width: 50px; min-width: 50px;">${data.totalQty}</td>
+            `;
+            
+            // Agregar datos para categorías fijas
+            FIXED_CATEGORIES.forEach(category => {
+                const qty = data.categories[category] || 0;
+                rowHTML += `<td style="text-align: center; font-size: 11px; width: 60px; min-width: 60px;">${qty > 0 ? qty : '-'}</td>`;
+            });
+            
+            // Agregar datos para categorías adicionales
+            additionalCategories.forEach(category => {
+                const qty = data.categories[category] || 0;
+                rowHTML += `<td style="text-align: center; font-size: 11px; width: 60px; min-width: 60px; background: #f8f9fa;">${qty > 0 ? qty : '-'}</td>`;
+            });
+            
+            rowHTML += `<td class="qr-code" style="text-align: center; font-size: 11px; width: 50px; min-width: 50px;">✓</td></tr>`;
+            row.innerHTML = rowHTML;
+            tbody.appendChild(row);
+        });
+        
+        // Aplicar filtro si hay un término de búsqueda activo
+        if (currentCustodySearchTerm) {
+            filterCustodyTable();
+        }
+        
+        // ACTUALIZAR TAMBIÉN LAS ESTADÍSTICAS DEL CUSTODY MANAGER
+        custodyManager.updateDashboard();
+        
+    } else {
+        console.warn('custodyManager o FIXED_CATEGORIES no están disponibles');
+    }
+}
+
+// Función para actualizar el header de la tabla dinámicamente
+function updateCustodyDashboardHeader(additionalCategories = []) {
+    const thead = document.getElementById('custodyDashboardHeader');
+    
+    let headerHTML = '<tr><th style="font-size: 11px; padding: 6px 4px;">Employee</th><th style="font-size: 11px; padding: 6px 4px;">Total</th>';
+    
+    // Agregar categorías fijas
+    if (typeof FIXED_CATEGORIES !== 'undefined') {
+        FIXED_CATEGORIES.forEach(category => {
+            // Acortar nombres largos para el header
+            const shortName = category
+                .replace("BACKPACK COOLER", "BACK COOLER")
+                .replace("MAN'sSHIRT LS", "MAN SHIRT LS")
+                .replace("WOMAN'sSHIRT LS", "WOMAN SHIRT LS")
+                .replace("MAN's SHIRT", "MAN SHIRT")
+                .replace("MAN's SHORT", "MAN SHORT")
+                .replace("MAN's PANT", "MAN PANT")
+                .replace("WOMAN's SHIRT", "WOMAN SHIRT")
+                .replace("WOMAN's SHORT", "WOMAN SHORT")
+                .replace("WOMAN's PANT", "WOMAN PANT");
+            headerHTML += `<th style="font-size: 10px; padding: 6px 2px; text-align: center; white-space: nowrap; width: 60px; min-width: 60px;">${shortName}</th>`;
+        });
+    }
+    
+    // Agregar categorías adicionales
+    additionalCategories.forEach(category => {
+        const shortName = category.length > 14 ? category.substring(0, 5) + '...' : category;
+        headerHTML += `<th style="font-size: 10px; padding: 6px 2px; text-align: center; white-space: nowrap; background: #f8f9fa;" title="${category}">${shortName}</th>`;
+    });
+    
+    headerHTML += '<th style="font-size: 10px; padding: 6px 2px; text-align: center; width: 50px; min-width: 50px;">QR Code</th></tr>';
+    thead.innerHTML = headerHTML;
+}
+
+// Variable global para mantener el término de búsqueda de custody
+let currentCustodySearchTerm = '';
+
+// Función para filtrar la tabla Assets in Custody
+function filterCustodyTable() {
+    const searchTerm = document.getElementById('custodySearch').value.toLowerCase();
+    currentCustodySearchTerm = searchTerm;
+    const rows = document.querySelectorAll('#custodyDashboardBody tr');
+    
+    rows.forEach(row => {
+        const employeeName = row.cells[0].textContent.toLowerCase();
+        
+        if (employeeName.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// Restaurar el término de búsqueda cuando se actualiza la tabla
+function restoreCustodySearchTerm() {
+    if (currentCustodySearchTerm) {
+        document.getElementById('custodySearch').value = currentCustodySearchTerm;
+        filterCustodyTable();
+    }
+}
+
+// Actualizar también la función principal del dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    // Esperar un momento para asegurar que los scripts se hayan cargado
+    setTimeout(async function() {
+        await updateAssetsDashboard();
+        await updateTeamDashboard();
+        await updateCustodyDashboard();
+        restoreSearchTerm();
+        restoreCustodySearchTerm(); // ← AÑADIR ESTA LINEA
+    }, 1000);
+    
+    // Actualizar cada 5 segundos por si hay cambios
+    setInterval(async function() {
+        await updateAssetsDashboard();
+        await updateTeamDashboard();
+        await updateCustodyDashboard();
+        restoreSearchTerm();
+        restoreCustodySearchTerm(); // ← AÑADIR ESTA LINEA
+    }, 45000);
+});                        
+
+       // Función para actualizar las estadísticas de assets en el dashboard
+async function updateAssetsDashboard() {
+    // Verificar si assetsManager está disponible
+    if (typeof assetsManager !== 'undefined') {
+        const stats = await assetsManager.getStats();
+        const tbody = document.getElementById('assetsAvailableBody');
+
+        tbody.innerHTML = '';
+        
+        // Actualizar las métricas de assets EXCEPTO "Total Assets In Custody"
+        const assetsQtyElement = document.getElementById('assetsQty');
+        if (assetsQtyElement) {
+            assetsQtyElement.textContent = stats.total;
+        }
+        
+        const assetsCostElement = document.getElementById('assetsCost');
+        if (assetsCostElement) {
+            assetsCostElement.textContent = `$${stats.totalCost}`;
+        }
+        
+        // ⚠️ NO actualizar availableQty aquí - lo hace updateCustodyDashboard
+        // El elemento "availableQty" muestra "Total Assets In Custody"
+        // y debe ser actualizado solo por updateCustodyDashboard
+        
+        const lostQtyElement = document.getElementById('lostQty');
+        if (lostQtyElement) {
+            lostQtyElement.textContent = stats.totalLost;
+        }
+        
+        const lostPercentageElement = document.getElementById('lostPercentage');
+        if (lostPercentageElement) {
+            lostPercentageElement.textContent = `${stats.lostPercentage}%`;
+        }
+        
+        const lostCostElement = document.getElementById('lostCost');
+        if (lostCostElement) {
+            lostCostElement.textContent = `$${stats.totalLostCost}`;
+        }
+        
+        // Actualizar la tabla Assets Available
+        updateAssetsAvailableTable();
+    } else {
+        console.warn('assetsManager no está disponible');
+    }
+}
+
+        // Función para actualizar la tabla Assets Available
+async function updateAssetsAvailableTable() {
+    if (typeof assetsManager !== 'undefined') {
+        const assets = await assetsManager.getAllAssets();
+        const tbody = document.getElementById('assetsAvailableBody');
+        
+        tbody.innerHTML = '';
+        
+        if (assets.length === 0) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td colspan="5" style="text-align: center; color: #666; padding: 20px;">
+                    No assets found
+                </td>
+            `;
+            tbody.appendChild(row);
+            return;
+        }
+        
+        // Agrupar assets por categoría
+        const assetsByCategory = {};
+        assets.forEach(asset => {
+            if (!assetsByCategory[asset.category]) {
+                assetsByCategory[asset.category] = {
+                    qtyInitial: 0,
+                    qtyAdd: 0,
+                    qtyLost: 0,
+                    qtyAvailable: 0,
+                    hasLowStock: false
+                };
+            }
+            assetsByCategory[asset.category].qtyInitial += asset.qtyInitial;
+            assetsByCategory[asset.category].qtyAdd += asset.qtyAdd;
+            assetsByCategory[asset.category].qtyLost += asset.qtyLost;
+            assetsByCategory[asset.category].qtyAvailable += asset.qtyAvailable;
+
+            // ✅ Calcular low stock DIRECTAMENTE
+            const threshold = asset.lowStockThreshold || 5;
+            if (asset.qtyAvailable <= threshold) {
+                assetsByCategory[asset.category].hasLowStock = true;
+            }
+        });
+        
+        // Crear filas para cada categoría
+        Object.keys(assetsByCategory).forEach(category => {
+            const data = assetsByCategory[category];
+            
+            // ✅ CALCULAR LA CANTIDAD REAL DISPONIBLE (restando los asignados)
+            let realAvailableQty = data.qtyAvailable;
+            
+            if (typeof custodyManager !== 'undefined') {
+                // Obtener todos los assets de esta categoría
+                const categoryAssets = assets.filter(asset => asset.category === category);
+                
+                // Sumar las cantidades asignadas de todos los assets de esta categoría
+                let totalAssignedInCategory = 0;
+                categoryAssets.forEach(asset => {
+                    totalAssignedInCategory += custodyManager.getAssetAssignedQuantity(asset.assetId);
+                });
+                
+                // Calcular la cantidad real disponible
+                realAvailableQty = Math.max(0, data.qtyAvailable - totalAssignedInCategory);
+                
+                // ✅ RECALCULAR low stock con la cantidad real disponible
+                const anyAssetInCategory = categoryAssets[0]; // Tomar el primer asset como referencia
+                const threshold = anyAssetInCategory?.lowStockThreshold || 5;
+                data.hasLowStock = realAvailableQty <= threshold;
+            }
+            
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td><a class="employee-link" onclick="openAssetsModalWithFilter('${category.replace(/'/g, "\\'")}')" 
+                    style="cursor: pointer; color: #3498db; text-decoration: none; font-weight: 500;">
+                    ${category}</td>
+                <td>${data.qtyInitial}</td>
+                <td>${data.qtyAdd}</td>
+                <td>${data.qtyLost}</td>
+                <td style="font-weight: bold; ${data.hasLowStock ? 'color: #e74c3c; background: #ffeaea;' : 'color: #27ae60;'}">
+                    ${realAvailableQty}
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+}
+
+        // Función para actualizar las estadísticas del equipo en el dashboard
+        async function updateTeamDashboard() {
+            // Verificar si teamManager está disponible
+             if (typeof teamManager.getStats === 'function') {
+                await teamManager.getAllEmployees();
+                const stats = teamManager.getStats();
+                
+                // Actualizar la cantidad de equipo
+                const teamQtyElement = document.getElementById('teamQty');
+                if (teamQtyElement) {
+                    teamQtyElement.textContent = stats.total;
+                }
+                
+                // Actualizar el estado del equipo
+                const teamStatusElement = document.getElementById('teamStatus');
+                if (teamStatusElement) {
+                    let statusText = `${stats.active} Active`;
+                    if (stats.terminated > 0) {
+                        statusText += `, ${stats.terminated} Terminated`;
+                    }
+                    if (stats.inactive > 0) {
+                        statusText += `, ${stats.inactive} Inactive`;
+                    }
+                    teamStatusElement.textContent = statusText;
+                }
+                
+                // Actualizar la tabla TEAM
+                await updateTeamTable();
+            } else {
+                console.warn('teamManager no está disponible');
+            }
+        }
+
+        // Función para actualizar la tabla TEAM
+        async function updateTeamTable() {
+            if (typeof teamManager.getAllEmployees === 'function') {
+                const employees = await teamManager.getAllEmployees();
+                const tbody = document.getElementById('teamTableBody');
+                
+                tbody.innerHTML = '';
+                
+                if (employees.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="4" style="text-align: center; color: #666; padding: 20px;">
+                            No employees found
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                    return;
+                }
+                
+                employees.forEach(employee => {
+                    const row = document.createElement('tr');
+                    const statusClass = employee.status === 'Active' ? 'status-active' : 
+                                       employee.status === 'Terminated' ? 'status-terminated' : 'status-inactive';
+                    
+                    row.innerHTML = `
+                        <td>
+                            <a class="employee-link" onclick="openTeamModalAndSelectEmployee('${employee.employeeId}', '${employee.fullName}')">
+                                ${employee.employeeId}
+                            </a>
+                        </td>
+                        <td>
+                            <a class="employee-link" onclick="openTeamModalAndSelectEmployee('${employee.employeeId}', '${employee.fullName}')">
+                                ${employee.fullName}
+                            </a>
+                        </td>
+                        <td>${employee.phone}</td>
+                        <td>
+                            <span class="status-badge ${statusClass}">${employee.status}</span>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                // Aplicar filtro si hay un término de búsqueda activo
+                if (currentSearchTerm) {
+                    filterTeamTable();
+                }
+            }
+        }
+
+        // Función para filtrar la tabla TEAM
+        function filterTeamTable() {
+            const searchTerm = document.getElementById('teamSearch').value.toLowerCase();
+            currentSearchTerm = searchTerm; // Guardar el término actual
+            const rows = document.querySelectorAll('#teamTableBody tr');
+            
+            rows.forEach(row => {
+                const id = row.cells[0].textContent.toLowerCase();
+                const name = row.cells[1].textContent.toLowerCase();
+                const phone = row.cells[2].textContent.toLowerCase();
+                const status = row.cells[3].textContent.toLowerCase();
+                
+                if (id.includes(searchTerm) || name.includes(searchTerm) || 
+                    phone.includes(searchTerm) || status.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Función para abrir el modal del equipo y seleccionar un empleado específico
+        function openTeamModalAndSelectEmployee(employeeId, employeeName) {
+            if (typeof teamManager !== 'undefined') {
+                // Abrir el modal del equipo
+                openTeamModal();
+                
+                // Esperar a que el modal se cargue y luego seleccionar el empleado
+                setTimeout(() => {
+                    // Primero establecer el filtro de búsqueda en team.js
+                    const employeeSearchInput = document.getElementById('employeeSearch');
+                    if (employeeSearchInput) {
+                        employeeSearchInput.value = employeeName;
+                        searchEmployees(); // Ejecutar la búsqueda
+                    }
+                    
+                    // Luego editar el empleado
+                    editEmployee(employeeId);
+                }, 300);
+            } else {
+                alert('El módulo de gestión de empleados no está disponible');
+            }
+        }
+
+        // Función para abrir el modal del equipo
+        function openTeamModal() {
+            if (typeof teamManager !== 'undefined') {
+                // Actualizar el dashboard antes de abrir el modal
+                updateTeamDashboard();
+                
+                // Abrir el modal del equipo
+                if (typeof openTeamModal === 'function') {
+                    openTeamModal();
+                } else {
+                    // Si la función no está disponible, usar el método del teamManager
+                    const modal = document.getElementById('teamModal');
+                    if (modal) {
+                        modal.style.display = 'block';
+                        loadEmployeesTable();
+                        updateEmployeeStats();
+                    }
+                }
+                
+                // Actualizar el dashboard cuando se cierre el modal
+                const modal = document.getElementById('teamModal');
+                if (modal) {
+                    const observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                                if (modal.style.display === 'none') {
+                                   awaitupdateTeamDashboard();
+                                }
+                            }
+                        });
+                    });
+                    
+                    observer.observe(modal, { attributes: true });
+                }
+            } else {
+                alert('El módulo de gestión de empleados no está disponible');
+            }
+        }
+
+        // Función para abrir el modal de categorías
+        function openCategoryModal() {
+            if (typeof categoryManager !== 'undefined') {
+                if (typeof openCategoryModal === 'function') {
+                    openCategoryModal();
+                }
+            } else {
+                alert('El módulo de categorías no está disponible');
+            }
+        }
+
+        // Función para abrir el modal de assets
+       function openAssetsModal() {
+            if (typeof assetsManager !== 'undefined') {
+                if (typeof openAssetsModal === 'function') {
+                    openAssetsModal();
+                    
+                    // Actualizar el dashboard cuando se cierre el modal
+                    const modal = document.getElementById('assetsModal');
+                    if (modal) {
+                        const observer = new MutationObserver(function(mutations) {
+                            mutations.forEach(function(mutation) {
+                                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                                    if (modal.style.display === 'none') {
+                                         updateAssetsDashboard();
+                                    }
+                                }
+                            });
+                        });
+                        
+                        observer.observe(modal, { attributes: true });
+                    }
+                }
+            } else {
+                alert('El módulo de assets no está disponible');
+            }
+        }
+
+        function openCustodyModal() {
+           if (typeof custodyManager !== 'undefined') {
+           openCustodyModal(); // Esta función está en custody.js
+          } else {
+           alert('El módulo de custodia no está disponible');
+          }
+        }
+ 
+        // Función para abrir el modal de assets con filtro aplicado
+        function openAssetsModalWithFilter(categoryName) {
+        if (typeof assetsManager !== 'undefined') {
+        // Abrir el modal de assets.js
+        openAssetsModal();
+        
+        // Esperar a que el modal se cargue y luego aplicar el filtro
+        setTimeout(() => {
+            // Buscar el input de búsqueda en el modal de assets
+            const assetSearchInput = document.getElementById('assetSearch');
+            if (assetSearchInput) {
+                // Establecer el valor del filtro con la categoría clickeada
+                assetSearchInput.value = categoryName;
+                
+                // Ejecutar la búsqueda
+                if (typeof searchAssets === 'function') {
+                    searchAssets();
+                }
+            }
+         }, 300);
+        } else {
+        alert('El módulo de gestión de assets no está disponible');
+     }
+    }
+
+        // Restaurar el término de búsqueda cuando se actualiza la tabla
+       function restoreSearchTerm() {
+            if (currentSearchTerm) {
+                document.getElementById('teamSearch').value = currentSearchTerm;
+                filterTeamTable();
+            }
+        }
+
+        // Actualizar el dashboard cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esperar un momento para asegurar que los scripts se hayan cargado
+            setTimeout(async function() {
+                await updateAssetsDashboard();
+                await updateTeamDashboard();
+                restoreSearchTerm();
+            }, 1000);
+            
+            // Actualizar cada 5 segundos por si hay cambios
+            setInterval(async function() {
+                await updateAssetsDashboard();
+                await updateTeamDashboard();
+                restoreSearchTerm();
+            }, 60000);
+        });
+    </script>
+    <script src="indexeddb-manager.js"></script>
+    <script src="xlsx.full.min.js"></script>
+    <script src="category.js"></script>
+    <script src="team.js"></script>
+    <script src="assets.js"></script>
+    <script src="custody.js"></script>
+</body>
+</html>
