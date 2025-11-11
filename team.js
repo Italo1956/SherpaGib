@@ -1052,7 +1052,7 @@ async function submitEmployeeForm(event) {
         hireDate: formData.get('hireDate'),
         rehireDate: formData.get('rehireDate') || '',
         terminationDate: formData.get('terminationDate') || '',
-        image: imagePreview.style.display !== 'none' ? imagePreview.src : ''
+        image: imagePath
     };
 
     // Manejar el envío de correo de confirmación
@@ -1132,8 +1132,10 @@ async function editEmployee(employeeId) {
         document.getElementById('rehireDate').value = rehireDate;
         document.getElementById('terminationDate').value = terminationDate;
         document.getElementById('hours').value = employee.hours;
-
+        
+        document.getElementById('employeeImagePath').value = employee.image || ''; 
         const imagePreview = document.getElementById('employeeImagePreview');
+        
         if (employee.image) {
             imagePreview.src = employee.image;
             imagePreview.style.display = 'block';
@@ -1746,4 +1748,5 @@ function debugTeam() {
     console.log('Next ID:', stats.nextEmployeeId);
     console.log('All employees:', teamManager.getAllEmployees());
 }
+
 
