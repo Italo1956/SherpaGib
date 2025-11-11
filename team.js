@@ -1379,7 +1379,7 @@ function createTeamModal() {
                         <div class="form-group" style="margin-bottom: 15px;">
                             <label style="display: block; margin-bottom: 5px; font-weight: bold;">Photo Path (team folder):</label>
                             <input type="text" id="employeeImagePath" name="image"
-                            placeholder="select image"
+                            placeholder="select image ej: team/name001.jpg"
                             style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"
                             oninput="document.getElementById('employeeImagePreview').src = this.value; document.getElementById('employeeImagePreview').style.display = this.value ? 'block' : 'none';">
                             <div style="font-size: 12px; color: #666; margin-top: 5px;">
@@ -1751,6 +1751,7 @@ function debugTeam() {
     console.log('Next ID:', stats.nextEmployeeId);
     console.log('All employees:', teamManager.getAllEmployees());
 }
+
 
 
 
