@@ -1376,15 +1376,18 @@ function createTeamModal() {
                         <div class="form-section" style="margin-bottom: 5px;">
                             <h3 style="color: #34495e; margin-bottom: 7px;">Personal Information</h3>
 
-                            <div class="form-group" style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Photo:</label>
-                                <input type="file" id="employeeImage" accept="image/jpeg,image/png"
-                                       onchange="handleImageUpload(event)"
-                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                <div style="font-size: 12px; color: #666; margin-top: 5px;">Select file - No file chosen</div>
-                                <img id="employeeImagePreview" style="display: none; max-width: 100px; max-height: 100px; margin-top: 10px; border-radius: 5px; cursor: pointer;"
-                                     onclick="zoomImage(this)" title="Click to zoom">
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Photo Path (team folder):</label>
+                            <input type="text" id="employeeImagePath" name="image"
+                            placeholder="select image"
+                            style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"
+                            oninput="document.getElementById('employeeImagePreview').src = this.value; document.getElementById('employeeImagePreview').style.display = this.value ? 'block' : 'none';">
+                            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                            Enter the relative path of the image (ej: team/name.jpg).
                             </div>
+                            <img id="employeeImagePreview" style="display: none; max-width: 100px; max-height: 100px; margin-top: 10px; border-radius: 5px; cursor: pointer;"
+                             onclick="zoomImage(this)" title="Click to zoom">
+                        </div>
 
                             <div class="form-group" style="margin-bottom: 15px;">
                                 <label style="display: block; margin-bottom: 5px; font-weight: bold;">Full Name:*</label>
@@ -1748,5 +1751,6 @@ function debugTeam() {
     console.log('Next ID:', stats.nextEmployeeId);
     console.log('All employees:', teamManager.getAllEmployees());
 }
+
 
 
