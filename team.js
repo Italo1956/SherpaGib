@@ -1038,7 +1038,7 @@ async function submitEmployeeForm(event) {
 
     const formData = new FormData(event.target);
     const employeeId = document.getElementById('employeeId').value;
-    const imagePreview = document.getElementById('employeeImagePreview');
+    const imagePath = formData.get('image') ? formData.get('image').trim() : '';
 
     const employeeData = {
         fullName: formData.get('fullName').trim(),
@@ -1746,3 +1746,4 @@ function debugTeam() {
     console.log('Next ID:', stats.nextEmployeeId);
     console.log('All employees:', teamManager.getAllEmployees());
 }
+
